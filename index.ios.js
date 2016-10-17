@@ -1,74 +1,105 @@
 /**
  * Created by buhe on 2016/10/10.
  */
+import React, {
+    Component,
+} from 'react';
+import {
+    StyleSheet,
+    Text,
+    View,
+    AppRegistry,
+    Dimensions
+} from 'react-native';
 
-import App from './bootstrap.js';
+import {
+    StackNavigation,
+    DrawerNavigation,
+    DrawerNavigationItem,
+    NavigationProvider
+} from '@exponent/ex-navigation';
 
-//import React, {
-//    Component,
-//} from 'react';
-//import {
-//    StyleSheet,
-//    Text,
-//    View,
-//    AppRegistry,
-//    Dimensions
-//} from 'react-native';
-//
-//import Umeng from 'air-umeng';
-//import Sidebar from 'react-native-sidebar';
-//
-//
-//class AirApps extends Component {
-//  constructor() {
-//    super();
-//    Umeng.startWithAppkey('55894b6d67e58e66c5000d6d');
-//  }
-//
-//  renderLeftSidebar() {
-//    return (
-//        <View style={{backgroundColor:'white' , flex:1}}>
-//          <Text>Left</Text>
-//        </View>
-//    )
-//
-//  }
-//
-//  renderRightSidebar() {
-//    return (
-//        <View>
-//          <Text>Right</Text>
-//        </View>
-//    )
-//  }
-//
-//  renderContent() {
-//    return (
-//        <View style={{backgroundColor:'rgba(0,0,0,0.9)' , flex:1}}>
-//          <Text>Content</Text>
-//        </View>
-//    )
-//  }
-//
-//  render() {
-//    return (
-//        <Sidebar
-//            leftSidebar={ this.renderLeftSidebar() }
-//            //rightSidebar={ this.renderRightSidebar() }
-//            style={{flex: 1 }}
-//            >
-//          { this.renderContent() }
-//        </Sidebar>
-//    )
-//  }
-//}
-//const styles = StyleSheet.create({
-//  container: {
-//    flex: 1,
-//    justifyContent: 'center',
-//    alignItems: 'center',
-//    backgroundColor: '#F5FCFF',
-//  }
-//});
-//
-//AppRegistry.registerComponent('AirKit', () => AirApps);
+import Router from './screens';
+
+// Treat the DrawerNavigationLayout route like any other route -- you may want to set
+// it as the intiial route for a top-level StackNavigation
+
+class DrawerNavigationLayout extends React.Component {
+  static route = {
+    navigationBar: {
+      visible: false,
+    }
+  };
+
+  render() {
+    return (
+        <NavigationProvider router={Router}>
+          <DrawerNavigation
+              id='main'
+              initialItem='home'
+              drawerWidth={300}
+              renderHeader={this._renderHeader}
+              >
+            <DrawerNavigationItem
+                id='home'
+                selectedStyle={styles.selectedItemStyle}
+                renderTitle={isSelected => this._renderTitle('Home', isSelected)}
+                >
+              <StackNavigation
+                  id='home'
+                  initialRoute={Router.getRoute('home')}
+                  />
+            </DrawerNavigationItem>
+
+            <DrawerNavigationItem
+                id='about'
+                selectedStyle={styles.selectedItemStyle}
+                renderTitle={isSelected => this._renderTitle('About', isSelected)}
+                >
+              <StackNavigation
+                  id='about'
+                  initialRoute={Router.getRoute('about')}
+                  />
+            </DrawerNavigationItem>
+
+          </DrawerNavigation>
+        </NavigationProvider>
+    );
+  }
+
+  _renderHeader = () => {
+    return (
+        <View style={styles.header}>
+        </View>
+    );
+  };
+
+  _renderTitle(text:string, isSelected:boolean) {
+    return (
+        <Text style={[styles.titleText, isSelected ? styles.selectedTitleText : {}]}>
+          {text}
+        </Text>
+    );
+  }
+
+;
+}
+
+const styles = StyleSheet.create({
+  header: {
+    height: 20
+  },
+
+  selectedItemStyle: {
+    backgroundColor: 'blue'
+  },
+
+  titleText: {
+    fontWeight: 'bold'
+  },
+
+  selectedTitleText: {
+    color: 'white'
+  }
+});
+AppRegistry.registerComponent('AirKit', () => DrawerNavigationLayout);
