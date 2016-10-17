@@ -37,7 +37,7 @@ class DrawerNavigationLayout extends React.Component {
           <DrawerNavigation
               id='main'
               initialItem='home'
-              drawerWidth={300}
+              drawerWidth={200}
               renderHeader={this._renderHeader}
               >
             <DrawerNavigationItem
